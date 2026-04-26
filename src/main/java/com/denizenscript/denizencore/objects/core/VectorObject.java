@@ -1,15 +1,11 @@
 package com.denizenscript.denizencore.objects.core;
 
 import com.denizenscript.denizencore.DenizenCore;
-import com.denizenscript.denizencore.DenizenImplementation;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.data.Actionable;
-import com.denizenscript.denizencore.utilities.debugging.Debug;
-
-import java.util.Vector;
 
 /**
  * Represents an object that contains X/Y/Z 3D Vector.
