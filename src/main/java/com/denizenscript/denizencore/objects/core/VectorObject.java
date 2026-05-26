@@ -6,6 +6,7 @@ import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.data.Actionable;
+import com.denizenscript.denizencore.utilities.data.DataActionException;
 
 /**
  * Represents an object that contains X/Y/Z 3D Vector.
@@ -318,6 +319,9 @@ public interface VectorObject extends ObjectTag, Actionable<VectorObject> {
     @Override
     default VectorObject operationAdd(ObjectTag value, TagContext context) {
         VectorObject toAdd = DenizenCore.implementation.vectorize(value, context);
+        if (toAdd == null) {
+            throw new DataActionException("Cannot add non-vector to vector!");
+        }
         VectorObject toReturn = duplicate();
         toReturn.setX(getX() + toAdd.getX());
         toReturn.setY(getY() + toAdd.getY());
@@ -328,6 +332,9 @@ public interface VectorObject extends ObjectTag, Actionable<VectorObject> {
     @Override
     default VectorObject operationSub(ObjectTag value, TagContext context) {
         VectorObject toSub = DenizenCore.implementation.vectorize(value, context);
+        if (toSub == null) {
+            throw new DataActionException("Cannot subtract non-vector from vector!");
+        }
         VectorObject toReturn = duplicate();
         toReturn.setX(getX() - toSub.getX());
         toReturn.setY(getY() - toSub.getY());
@@ -337,11 +344,17 @@ public interface VectorObject extends ObjectTag, Actionable<VectorObject> {
 
     @Override
     default VectorObject operationMul(ObjectTag value, TagContext context) {
+        if (!value.asElement().isDouble()) {
+            throw new DataActionException("Cannot multiply vector by non-number!");
+        }
         return this.duplicate().multipliedBy(value.asElement().asDouble());
     }
 
     @Override
     default VectorObject operationDiv(ObjectTag value, TagContext context) {
+        if (!value.asElement().isDouble()) {
+            throw new DataActionException("Cannot divide vector by non-number!");
+        }
         return this.duplicate().multipliedBy(1.0 / value.asElement().asDouble());
     }
 }

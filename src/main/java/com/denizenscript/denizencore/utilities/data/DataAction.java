@@ -99,10 +99,7 @@ public class DataAction {
             }
             case SET -> {
                 requiresInputValue();
-                if (inputValue == null) {
-                    setResult(null, context);
-                }
-                else if (inputValue instanceof ListTag listTag) {
+                if (inputValue instanceof ListTag listTag) {
                     setResult(new ListTag(listTag), context);
                 }
                 else {
@@ -122,6 +119,10 @@ public class DataAction {
         // Abstract operators
         requiresInputValue();
         ObjectTag base = getBase(context);
+        if (base == null) {
+            Debug.echoError("Cannot perform data action on null object.");
+            return;
+        }
         if (!(base instanceof Actionable<?>)) {
             Debug.echoError("Cannot perform data action on non-actionable object '" + base.identify() + "'.");
             return;
@@ -141,10 +142,14 @@ public class DataAction {
     }
 
     public ObjectTag getBase(TagContext context) {
-        if (index == 0) {
-            return CoreUtilities.fixType(provider.getValueAt(key), context);
+        ObjectTag val = provider.getValueAt(key);
+        if (val == null) {
+            return null;
         }
-        ListTag list = ListTag.getListFor(provider.getValueAt(key), context);
+        if (index == 0) {
+            return CoreUtilities.fixType(val, context);
+        }
+        ListTag list = ListTag.getListFor(val, context);
         return list.getObject((index == Integer.MAX_VALUE ? list.size() : index) - 1);
     }
 
